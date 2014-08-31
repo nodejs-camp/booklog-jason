@@ -1,0 +1,11 @@
+extend layout
+block content
+	div
+		ul
+			each jj in posts
+				li: = jj.subject
+				li: = jj.content
+	div
+		ul
+			li:= posts[0].content
+			li:= posts[1].content
