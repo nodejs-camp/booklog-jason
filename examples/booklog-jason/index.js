@@ -22,20 +22,43 @@ app.set('views', __dirname + '/views');
 // (although you can still mix and match)
 app.set('view engine', 'jade');
 
-function User(name, email) {
-  this.name = name;
-  this.email = email;
-}
+var posts = [];
 
-// Dummy users
-var users = [
-    new User('tj', 'tj@vision-media.ca')
-  , new User('ciaran', 'ciaranj@gmail.com')
-  , new User('aaron', 'aaron.heckmann+github@gmail.com')
-];
+app.get('/welcome', function(req, res) {
+	res.render('index');
+});
 
-app.get('/', function(req, res){
-  res.render('users', { users: users });
+app.get('/1/post', function(req, res) {
+	res.send(posts);
+});
+
+app.post('/1/post', function(req, res) {
+	var subject;
+	var content;
+	
+	if (typeof(req.body) === 'undefined') {
+		subject = req.query.subject;
+		content = req.query.content;
+	}
+
+	var post = {
+		subject: subject,
+		content: content
+	};
+
+	posts.push(post);
+
+	res.send({ status: 'OK'});
+});
+
+app.delete('/1/post', function(req, res) {
+	res.send("Delete a post");
+});
+
+app.put('/1/post/:postId', function(req, res) {
+	var id = req.params.postId;
+
+	res.send("Update a post: " + id);
 });
 
 // change this to a better error handler in your code

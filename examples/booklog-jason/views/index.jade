@@ -1,0 +1,21 @@
+
+html
+  head
+    link(type='text/css', rel='stylesheet', href='/site.css')
+    title Hello
+  body
+  h1 Remote repo. 操作
+  p 首先要認識的是 Protocol，像在 Github 上面看自己的 Project，會有分 Public Clone URL 跟 Your Clone URL，這有什麼差?
+  p git://github.com/ihower/project.git 這種的是使用 Git 自己的 prototol，優點是速度快，但是沒有認證機制，只適合 read only (port:9418)
+  p git@github.com/ihower/project.git 這種的是使用 SSH，可以有認證(SSH key)
+  p Git 也可以透過 HTTPS 的方式，不過速度較慢，比較適合對 firewall 有限制的情況
+  p 其中 Github 就是同時用 SSH + Git protocol，兼顧認證需求及速度。
+  p git clone remote_address
+  p git checkout --track -b foobar origin/foobar 將遠端的 branch checkout 回來並建立一個新的 local branch，加上 --track 表示你之後還要pull、push回去，所以請 Git 記住對應關係。
+      | git pull (
+      local_branch_name
+        | origin/
+        remote_branch_name
+          | ) 去遠端 fetch 新版並 merge 進 local branch
+          | git push 將 local branch 的 commit 紀錄更新到遠端
+          | git pull 要注意的是，如果別人在你上次 pull 之後有 push 新東西上去(也就是說跟你的 branch 產生分岔了)，此時有兩種情況： 一是 Git 可以順利 auto merge 的話，git 會自動多一次 merge commit，這也就為什麼常常 log 會跑出 Merge branch ‘master’ of git@foobar.com。二是如果有 conflict，這時候就需要你手動處理然後 commit。話說如果覺得這種 local branch 和 remote branch 的 merge commit log 很煩，建議可以改使用 git pull –rebase 指令來變成 fast-forward 形式 (就會變得像 svn up，而不會有 merge commit log)。rebase 的意思可能要下一篇才會詳細說明的清楚，簡單的說(?)，就是先砍掉 local branch 分岔點之後自己的 commit，然後把遠端的 commit 先一個個 apply 進來，最後再把自己的 commit 再 apply 進去 (如果有 conflict 會中途停下來，等你修好才會繼續 apply)，如此一來看線圖就會變成一條線而已，也就沒有所謂 merge 這個動作了。
